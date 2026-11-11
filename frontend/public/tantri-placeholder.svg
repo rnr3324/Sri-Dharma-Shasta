@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 560" role="img" aria-labelledby="title desc">
+  <title id="title">Tantri profile photo placeholder</title>
+  <desc id="desc">A devotional gold portrait illustration used until a profile photo is uploaded in the admin panel.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#211910"/><stop offset="1" stop-color="#0b0b0c"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f3e5ab"/><stop offset="1" stop-color="#b88720"/></linearGradient>
+  </defs>
+  <rect width="420" height="560" rx="28" fill="url(#bg)"/>
+  <circle cx="210" cy="205" r="130" fill="none" stroke="#d4af37" stroke-opacity=".3" stroke-width="2"/>
+  <circle cx="210" cy="205" r="111" fill="#d4af37" fill-opacity=".07" stroke="#d4af37" stroke-opacity=".22"/>
+  <path d="M210 107c-53 0-87 43-87 101 0 50 31 84 87 84s87-34 87-84c0-58-34-101-87-101Z" fill="url(#gold)" opacity=".9"/>
+  <path d="M74 480c6-95 57-148 136-148s130 53 136 148H74Z" fill="#6d0f1f" stroke="#d4af37" stroke-width="4"/>
+  <path d="M150 302c10 28 30 44 60 44s50-16 60-44" fill="none" stroke="#f3e5ab" stroke-width="6" stroke-linecap="round"/>
+  <path d="M156 196h108M158 211h104" stroke="#6d0f1f" stroke-width="7" stroke-linecap="round" opacity=".8"/>
+  <text x="210" y="526" fill="#f3e5ab" font-family="Georgia,serif" font-size="18" letter-spacing="3" text-anchor="middle">TANTRI PROFILE</text>
+</svg>

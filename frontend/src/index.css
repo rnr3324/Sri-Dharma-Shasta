@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+  body { @apply bg-ink font-body text-lg text-cream overflow-x-hidden; }
+  h1, h2, h3 { @apply font-display font-bold tracking-wide text-gold; }
+  :focus-visible { outline: 2px solid #F3E5AB; outline-offset: 3px; }
+  html:not([data-l='en']) * { letter-spacing: normal !important; text-transform: none !important; }
+}
+@layer components {
+  .btn { @apply inline-block rounded-full bg-gradient-to-br from-gold via-gold2 to-gold px-7 py-2.5 font-display font-bold tracking-wider text-[#1a1204] shadow-[0_0_22px_#d4af3766] transition hover:-translate-y-0.5 hover:shadow-[0_0_38px_#f3e5abaa]; }
+  .btn-sm { @apply px-4 py-1.5 text-sm; }
+  .ghost { @apply inline-block rounded-full border border-gold px-5 py-2 font-display text-gold hover:bg-gold/10; }
+  .pill { @apply rounded-full border border-gold bg-gradient-to-b from-maroon2 to-maroon px-5 py-2 font-display text-sm text-gold2 hover:shadow-[0_0_22px_#d4af3766]; }
+  .box { @apply rounded-xl border border-gold/30 border-l-4 border-l-gold bg-gradient-to-br from-[#1f1f23] to-coal p-5; }
+  .field { @apply w-full rounded-lg border border-gold/40 bg-ink px-3 py-2 text-cream; }
+  .label { @apply mb-1 mt-4 block text-gold2; }
+  .glow { background: radial-gradient(circle at 50% 38%, #d4af3733, transparent 55%), radial-gradient(circle at 50% 100%, #6d0f1f66, transparent 60%), #0B0B0C; }
+}
+.hero-img { background-size: cover; background-position: center; -webkit-mask-image: linear-gradient(0deg, transparent, #000 25%); mask-image: linear-gradient(0deg, transparent, #000 25%); }
+@media (min-width: 768px) { .hero-img { -webkit-mask-image: linear-gradient(90deg, transparent, #000 20%); mask-image: linear-gradient(90deg, transparent, #000 20%); } }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
