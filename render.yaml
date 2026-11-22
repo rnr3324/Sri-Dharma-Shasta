@@ -1,6 +1,5 @@
 
 services:
-  # Backend API
   - type: web
     name: sri-dharma-shasta-api
     runtime: node
@@ -9,53 +8,46 @@ services:
     buildCommand: npm ci
     startCommand: npm start
     healthCheckPath: /api/health
-
     envVars:
       - key: NODE_ENV
         value: production
-
       - key: MONGODB_URI
         sync: false
-
       - key: JWT_SECRET
         generateValue: true
-
       - key: ADMIN_EMAIL
         sync: false
-
       - key: ADMIN_PASSWORD_HASH
         sync: false
-
       - key: CLOUDINARY_CLOUD_NAME
         sync: false
-
       - key: CLOUDINARY_API_KEY
         sync: false
-
       - key: CLOUDINARY_API_SECRET
         sync: false
-
       - key: CLIENT_URL
         value: https://sridharmashasta.in,https://www.sridharmashasta.in
-
       - key: COUPON_CODE
         value: SWAMI10
-
       - key: COUPON_PERCENT
         value: "10"
-
       - key: SHIPPING_FEE
         value: "60"
-
       - key: FREE_SHIPPING_ABOVE
         value: "999"
 
-  # React Static Storefront
-  - type: static
+  - type: web
     name: sri-dharma-shasta-storefront
+    runtime: static
     rootDir: frontend
     domains:
       - sridharmashasta.in
       - www.sridharmashasta.in
     buildCommand: npm ci && npm run build
-    staticPublishPath: ./dist
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: sri-dharma-shasta-api
+          envVarKey: RENDER_EXTERNAL_URL
