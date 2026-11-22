@@ -3,6 +3,7 @@ import Modal from './Modal'
 import { useApp } from '../context/AppContext'
 import { POLICIES } from '../data/content'
 import { CONFIG } from '../config'
+import { PhoneIcon } from './Icons'
 
 export default function Footer() {
   const { t, orders } = useApp()
@@ -19,7 +20,7 @@ export default function Footer() {
       <p className="font-display text-gold">{t('SWAMIYE SARANAM AYYAPPA')}</p>
       <p>Hareeharasutham Ayyappa, Dharma Shasta: may your path be lit by faith.</p>
       <p>{t('Hyderabad, Telangana, India')}</p>
-      <p>📞 <a className={link} href={`tel:${CONFIG.phone.replace(/\s/g, '')}`}>{CONFIG.phone}</a></p>
+      <p className="inline-flex max-w-full flex-wrap items-center justify-center gap-2"><PhoneIcon className="h-4 w-4 shrink-0 text-gold"/><a className={`${link} break-all`} href={`tel:${CONFIG.phone.replace(/\s/g, '')}`}>{CONFIG.phone}</a></p>
       <p className="mt-2">
         {['ship', 'priv', 'terms'].map((k) => <button key={k} className={`${link} mx-2`} onClick={() => setM(k)}>{POLICIES[k][0]}</button>)}
         <button className={`${link} mx-2`} onClick={() => { setRes(''); setM('track') }}>Track Order</button>

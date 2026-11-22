@@ -4,7 +4,7 @@
 
 @layer base {
   html { scroll-behavior: smooth; scroll-padding-top: 80px; }
-  body { @apply bg-ink font-body text-lg text-cream overflow-x-hidden; }
+  body { @apply overflow-x-hidden bg-ink font-body text-base text-cream sm:text-lg; }
   h1, h2, h3 { @apply font-display font-bold tracking-wide text-gold; }
   :focus-visible { outline: 2px solid #F3E5AB; outline-offset: 3px; }
   html:not([data-l='en']) * { letter-spacing: normal !important; text-transform: none !important; }
@@ -20,5 +20,7 @@
   .glow { background: radial-gradient(circle at 50% 38%, #d4af3733, transparent 55%), radial-gradient(circle at 50% 100%, #6d0f1f66, transparent 60%), #0B0B0C; }
 }
 .hero-img { background-size: cover; background-position: center; -webkit-mask-image: linear-gradient(0deg, transparent, #000 25%); mask-image: linear-gradient(0deg, transparent, #000 25%); }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
 @media (min-width: 768px) { .hero-img { -webkit-mask-image: linear-gradient(90deg, transparent, #000 20%); mask-image: linear-gradient(90deg, transparent, #000 20%); } }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }

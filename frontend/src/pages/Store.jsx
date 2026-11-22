@@ -4,6 +4,7 @@ import { useApp } from '../context/AppContext'
 import { useGo } from '../utils/helpers'
 import { CATEGORIES } from '../data/products'
 import ProductCard from '../components/ProductCard'
+import { SearchIcon } from '../components/Icons'
 
 export default function Store() {
   const { t, count, subtotal, products } = useApp()
@@ -36,10 +37,10 @@ export default function Store() {
   }, [cat, q, products])
 
   return (
-    <main className="min-h-screen bg-[#100b09] text-[#f5e9c9]">
+    <main className={`min-h-screen bg-[#100b09] text-[#f5e9c9] ${count > 0 ? 'pb-24' : ''}`}>
 
       {/* STORE HERO */}
-      <section className="relative overflow-hidden border-b border-[#c9a227]/20 px-5 py-16 text-center sm:py-20">
+      <section className="relative overflow-hidden border-b border-[#c9a227]/20 px-5 py-10 text-center sm:py-16">
 
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(155,95,20,0.20),transparent_65%)]" />
 
@@ -69,7 +70,7 @@ export default function Store() {
       </section>
 
       {/* STORE CONTENT */}
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
 
         {/* SECTION HEADING */}
         <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
@@ -95,8 +96,8 @@ export default function Store() {
 
           <div className="relative flex-1">
 
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xl text-[#d7b443]">
-              ⌕
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#d7b443]">
+              <SearchIcon className="h-5 w-5"/>
             </span>
 
             <input
@@ -128,7 +129,7 @@ export default function Store() {
             Browse Categories
           </p>
 
-          <div className="flex gap-3 overflow-x-auto pb-3">
+          <div className="scrollbar-hide flex gap-3 overflow-x-auto pb-3">
 
             {cats.map((c) => (
 
@@ -152,17 +153,12 @@ export default function Store() {
         {/* PRODUCT GRID */}
         {list.length > 0 ? (
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid grid-cols-2 items-stretch gap-3 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
 
             {list.map((p) => (
 
-              <div
-                key={p.id}
-                className="group min-w-0 overflow-hidden rounded-2xl border border-[#c9a227]/20 bg-gradient-to-b from-[#241812] to-[#15100d] shadow-lg shadow-black/20 transition duration-300 hover:-translate-y-1 hover:border-[#d7b443]/70 hover:shadow-xl hover:shadow-[#c9a227]/10"
-              >
-
+              <div key={p.id} className="min-w-0">
                 <ProductCard p={p} />
-
               </div>
 
             ))}
@@ -203,7 +199,7 @@ export default function Store() {
       {/* FLOATING CART */}
       {count > 0 && (
 
-        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-[#d7b443]/50 bg-[#1b090b]/95 px-4 py-4 shadow-2xl backdrop-blur-xl">
+        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-[#d7b443]/50 bg-[#1b090b]/95 px-4 py-3 pb-[max(.75rem,env(safe-area-inset-bottom))] shadow-2xl backdrop-blur-xl">
 
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
 

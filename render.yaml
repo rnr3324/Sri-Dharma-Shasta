@@ -26,7 +26,7 @@ services:
       - key: CLOUDINARY_API_SECRET
         sync: false
       - key: CLIENT_URL
-        value: https://sridharmashasta.in,https://www.sridharmashasta.in
+        value: https://sri-dharma-shasta-storefront.onrender.com,https://sridharmashasta.in,https://www.sridharmashasta.in
       - key: COUPON_CODE
         value: SWAMI10
       - key: COUPON_PERCENT

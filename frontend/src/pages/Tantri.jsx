@@ -4,6 +4,12 @@ import { useApp } from '../context/AppContext'
 import { SERVICES } from '../data/content'
 import { CONFIG } from '../config'
 import { asset, waLink } from '../utils/helpers'
+import { PhoneIcon } from '../components/Icons'
+
+const localToday = () => {
+  const now = new Date()
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+}
 
 export default function Tantri() {
   const { t, site } = useApp()
@@ -35,13 +41,9 @@ export default function Tantri() {
   }
 
   const send = () => {
-    if (
-      !f.name.trim() ||
-      !f.phone.trim() ||
-      !f.date
-    ) {
+    if (!f.name.trim() || !/^\d{10}$/.test(f.phone) || !f.date) {
       setMsg({
-        err: 'Enter your name, phone and preferred date to continue.'
+        err: 'Enter your name, a valid 10-digit phone number, and preferred date to continue.'
       })
       return
     }
@@ -228,7 +230,10 @@ Phone: ${f.phone}
         {/* APPOINTMENT FORM */}
         {show && (
 
-          <section className="mt-8 animate-[fadeIn_0.4s_ease-out] rounded-3xl border border-[#c9a227]/50 bg-gradient-to-br from-[#1b1713] to-[#110e0c] p-5 shadow-2xl sm:p-8">
+          <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/80 p-4 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setShow(false) }}>
+          <section role="dialog" aria-modal="true" aria-labelledby="appointment-title" className="relative my-auto max-h-[calc(100vh-2rem)] w-full max-w-3xl animate-[fadeIn_0.4s_ease-out] overflow-y-auto rounded-3xl border border-[#c9a227]/50 bg-gradient-to-br from-[#1b1713] to-[#110e0c] p-5 shadow-2xl sm:p-8">
+
+            <button type="button" onClick={() => setShow(false)} aria-label="Close appointment request" className="absolute right-4 top-4 rounded-full border border-[#c9a227]/30 px-3 py-1 text-xl text-[#e9ca69] transition hover:bg-[#c9a227]/10">×</button>
 
             {/* FORM HEADER */}
             <div className="mb-7">
@@ -237,7 +242,7 @@ Phone: ${f.phone}
                 SRI DHARMA SHASTA
               </span>
 
-              <h3 className="mt-2 font-serif text-2xl font-bold text-[#e9ca69] sm:text-3xl">
+              <h3 id="appointment-title" className="mt-2 pr-10 font-serif text-2xl font-bold text-[#e9ca69] sm:text-3xl">
                 Request an Appointment
               </h3>
 
@@ -258,7 +263,7 @@ Phone: ${f.phone}
                 className="text-lg font-semibold text-[#e9ca69] transition hover:text-white"
                 href={`tel:${CONFIG.phone.replace(/\s/g, '')}`}
               >
-                📞 {CONFIG.phone}
+                <span className="inline-flex items-center gap-2"><PhoneIcon className="h-5 w-5 shrink-0"/>{CONFIG.phone}</span>
               </a>
 
             </div>
@@ -286,12 +291,17 @@ Phone: ${f.phone}
 
                 <input
                   type="tel"
-                  inputMode="tel"
+                  inputMode="numeric"
+                  autoComplete="tel-national"
+                  maxLength={10}
+                  pattern="[0-9]{10}"
+                  required
                   className="w-full rounded-xl border border-[#c9a227]/30 bg-[#0e0c0b] px-4 py-3 text-[#f5e9ce] outline-none transition placeholder:text-[#766d5d] focus:border-[#e7bd38] focus:ring-1 focus:ring-[#e7bd38]/30"
                   placeholder="Enter phone number"
                   value={f.phone}
-                  onChange={set('phone')}
+                  onChange={(event) => { setF((prev) => ({ ...prev, phone: event.target.value.replace(/\D/g, '').slice(0, 10) })); setMsg(null) }}
                 />
+                <small className="mt-1 block font-sans text-xs text-[#a99b83]">Enter exactly 10 digits.</small>
               </div>
 
               <div>
@@ -319,7 +329,8 @@ Phone: ${f.phone}
 
                 <input
                   type="date"
-                  min={new Date().toISOString().split('T')[0]}
+                  required
+                  min={localToday()}
                   className="w-full rounded-xl border border-[#c9a227]/30 bg-[#0e0c0b] px-4 py-3 text-[#f5e9ce] outline-none focus:border-[#e7bd38]"
                   value={f.date}
                   onChange={set('date')}
@@ -421,6 +432,7 @@ Phone: ${f.phone}
             )}
 
           </section>
+          </div>
 
         )}
 
@@ -440,5 +452,6 @@ Phone: ${f.phone}
       </div>
 
     </main>
-  )
+
+)
 }

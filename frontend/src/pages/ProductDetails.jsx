@@ -7,37 +7,79 @@ import Qty from '../components/Qty'
 
 export default function ProductDetails() {
   const { id } = useParams()
-  const { products, add, t } = useApp()
+  const { products, catalogReady, add, t, items, maxOrderQuantity } = useApp()
   const go = useGo()
   const [qty, setQty] = useState(1)
   const [added, setAdded] = useState(false)
   const product = products.find((item) => item.id === Number(id))
+  const existingQty = items.find((item) => item.p.id === product?.id)?.qty || 0
+  const remaining = Math.max(0, maxOrderQuantity - existingQty)
 
+  if (!product && !catalogReady) return <main className="grid min-h-[60vh] place-items-center bg-[#100b09] text-mute">Loading product…</main>
   if (!product) return <Navigate to="/store" replace />
 
+  const unitPrice = Number(product.price) || 0
+  const total = unitPrice * qty
+
   return (
-    <main className="min-h-[70vh] bg-[#100b09] px-4 py-8 text-cream sm:px-6 sm:py-12">
+    <main className="min-h-[70vh] bg-[#100b09] px-4 py-6 text-cream sm:px-6 sm:py-10">
       <div className="mx-auto max-w-6xl">
-        <nav aria-label="Breadcrumb" className="mb-6 text-sm text-mute">
-          <Link className="hover:text-gold2" to="/store">Store</Link><span className="mx-2">/</span><span className="text-gold2">{product.name}</span>
+        <nav aria-label="Breadcrumb" className="mb-4 flex flex-wrap items-center gap-2 font-sans text-sm text-mute sm:mb-6">
+          <Link className="hover:text-gold2" to="/store">Pooja Kits</Link>
+          <span aria-hidden="true" className="text-gold/50">/</span>
+          <span aria-current="page" className="max-w-[70vw] truncate text-gold2">{product.name}</span>
         </nav>
-        <section className="grid overflow-hidden rounded-3xl border border-gold/25 bg-gradient-to-br from-[#241812] to-[#120e0b] shadow-2xl md:grid-cols-2">
-          <div className="min-h-[320px] bg-[radial-gradient(circle_at_center,#d4af3725,transparent_65%)] p-4 sm:p-8 md:min-h-[540px]">
-            <ProductImage p={product} h={480} />
-          </div>
-          <div className="flex flex-col justify-center p-6 sm:p-10 lg:p-14">
-            <p className="text-xs font-semibold uppercase tracking-[.25em] text-gold">{product.cat}</p>
-            <h1 className="mt-3 text-3xl leading-tight text-gold2 sm:text-4xl">{product.name}</h1>
-            <p className="mt-5 text-3xl font-semibold text-cream">₹{Number(product.price).toLocaleString('en-IN')}</p>
-            <p className="mt-5 whitespace-pre-line leading-7 text-[#d4c7ac]">{product.desc || 'Prepared with care for your devotional practice.'}</p>
-            {product.includes?.length > 0 && <div className="mt-7 rounded-2xl border border-gold/20 bg-black/20 p-5"><h2 className="text-lg text-gold2">Included in this kit</h2><ul className="mt-3 space-y-2">{product.includes.map((item) => <li className="flex gap-2 text-[#e2d6bc]" key={item}><span className="text-gold">✦</span>{item}</li>)}</ul></div>}
-            <p className="mt-6 text-sm text-green-300">● In stock · ships in 2–3 days</p>
-            <p className="mt-1 text-sm text-mute">Free delivery on orders above ₹999</p>
-            <div className="mt-7 flex flex-wrap items-center gap-5"><span className="text-sm text-mute">Quantity</span><Qty value={qty} onChange={(delta) => setQty((current) => Math.max(1, Math.min(99, current + delta)))} /><span className="ml-auto text-lg font-semibold text-gold2">₹{(product.price * qty).toLocaleString('en-IN')}</span></div>
-            <button className="btn mt-7 w-full py-3" onClick={() => { add(product.id, qty); setAdded(true) }}>{added ? 'Added to cart ✓' : t('Add to Cart')}</button>
-            {added && <button className="ghost mt-3 w-full" onClick={() => go('/cart')}>View cart and checkout</button>}
+
+        <section className="overflow-hidden rounded-2xl border border-gold/20 bg-[#19120f] shadow-xl shadow-black/25 sm:rounded-3xl">
+          <div className="grid md:grid-cols-[1.05fr_.95fr]">
+            <div className="bg-[radial-gradient(circle_at_center,#d4af3720,transparent_65%)] p-3 sm:p-7 md:p-8">
+              <div className="overflow-hidden rounded-xl border border-gold/10 sm:rounded-2xl">
+                <ProductImage p={product} h="clamp(280px, 78vw, 520px)" />
+              </div>
+            </div>
+
+            <div className="flex min-w-0 flex-col border-t border-gold/15 p-5 sm:p-8 md:border-l md:border-t-0 md:p-10 lg:p-12">
+              <span className="w-fit rounded-full border border-gold/25 bg-gold/5 px-3 py-1 font-sans text-xs font-medium text-gold2">{product.cat}</span>
+              <h1 className="mt-4 break-words text-2xl leading-tight text-gold2 sm:text-4xl">{product.name}</h1>
+
+              <div className="mt-5 border-y border-gold/15 py-4">
+                <p className="font-sans text-xs uppercase tracking-[.16em] text-mute">Price</p>
+                <p className="mt-1 font-sans text-3xl font-bold tabular-nums text-cream sm:text-4xl">₹{unitPrice.toLocaleString('en-IN')}</p>
+              </div>
+
+              <div className="mt-5">
+                <h2 className="font-sans text-sm font-semibold text-gold2">Description</h2>
+                <p className="mt-2 whitespace-pre-line font-sans text-sm leading-6 text-[#d4c7ac] sm:text-base sm:leading-7">{product.desc || 'Prepared with care for your devotional practice.'}</p>
+              </div>
+
+              {product.includes?.length > 0 && (
+                <div className="mt-5 rounded-xl border border-gold/15 bg-black/15 p-4 sm:p-5">
+                  <h2 className="font-sans text-sm font-semibold text-gold2">Included in this kit</h2>
+                  <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+                    {product.includes.map((item) => <li className="flex gap-2 font-sans text-sm leading-5 text-[#e2d6bc]" key={item}><span aria-hidden="true" className="text-gold">✓</span><span>{item}</span></li>)}
+                  </ul>
+                </div>
+              )}
+
+              <div className="mt-auto pt-6">
+                <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-gold/15 bg-black/15 p-3 sm:p-4">
+                  <div>
+                    <p className="font-sans text-xs text-mute">Quantity</p>
+                    <Qty max={Math.max(1, remaining)} value={qty} onChange={(delta) => setQty((current) => Math.max(1, Math.min(Math.max(1, remaining), current + delta)))} />
+                  </div>
+                  <div className="text-right">
+                    <p className="font-sans text-xs text-mute">Total</p>
+                    <p className="font-sans text-xl font-bold tabular-nums text-gold2">₹{total.toLocaleString('en-IN')}</p>
+                  </div>
+                </div>
+                <button disabled={!remaining} className="btn mt-4 w-full py-3 disabled:cursor-not-allowed disabled:opacity-50" onClick={() => { if (remaining) { add(product.id, Math.min(qty, remaining)); setAdded(true) } }}>{remaining ? added ? 'Added to cart ✓' : t('Add to Cart') : 'Maximum quantity in cart'}</button>
+                {added && <button className="ghost mt-3 w-full" onClick={() => go('/cart')}>View cart and checkout</button>}
+              </div>
+            </div>
           </div>
         </section>
+
+        <Link to="/store" className="mt-5 inline-flex min-h-11 items-center gap-2 font-sans text-sm text-mute hover:text-gold2"><span aria-hidden="true">←</span> Back to Pooja Kits</Link>
       </div>
     </main>
   )

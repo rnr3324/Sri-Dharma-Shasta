@@ -3,11 +3,13 @@ import { useApp } from '../context/AppContext'
 import { useGo, asset } from '../utils/helpers'
 import { SERVICES, MANTRAS, RULES, TEMPLES } from '../data/content'
 import ProductImage from '../components/ProductImage'
+import { CONFIG } from '../config'
+import { waLink } from '../utils/helpers'
 
 function Section({ id, title, sub, children, alt }) {
   return (
     <section id={id} className={alt ? 'bg-coal' : ''}>
-      <div className="mx-auto max-w-6xl px-5 py-16">
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-5 sm:py-16">
         <h2 className="text-center text-2xl sm:text-4xl">{title}</h2>
         <div className="mb-3 mt-1 text-center text-sm text-gold">❖</div>
         {sub && <p className="mx-auto mb-8 max-w-prose text-center text-mute">{sub}</p>}
@@ -38,7 +40,7 @@ export default function Home() {
   const go = useGo()
   const [flip, setFlip] = useState({})
   const featured = products.slice(0, 12)
-  const value = [['Premium Pooja Kits', 'Authentic & Pure'], ['Secure Online Bookings', 'Simple and safe'], ['Door Delivery Across India', 'Right to your home'], ['Dedicated Support', 'Call us any day']]
+  const value = [['Ayyappa Pooja Essentials', 'Items for your devotional practice'], ['Clear Product Information', 'Review details and prices'], ['Seva Booking Requests', 'Share your preferred date'], ['Customer Support', 'Contact us by phone or WhatsApp']]
 
   // Shrine background images mapping
   const shrineImages = {
@@ -52,8 +54,8 @@ export default function Home() {
   return (
     <main>
       <div className="border-b border-gold bg-gradient-to-r from-maroon via-[#3a0912] to-maroon px-4 py-2 text-center text-gold2">
-        🪔 Mandala &amp; Makaravilakku season: order Irumudi and Deeksha kits early so they arrive in time.{' '}
-        <button className="text-gold underline" onClick={() => go('/store')}>Shop kits</button>
+        🪔 Pooja kits and devotional essentials for your Ayyappa vratham.{' '}
+        <button className="text-gold underline" onClick={() => go('/store')}>Explore kits</button>
       </div>
 
       <section className="relative flex min-h-[min(80vh,660px)] flex-col items-center overflow-hidden border-b border-gold text-center md:flex-row md:text-left">
@@ -62,8 +64,8 @@ export default function Home() {
           <div className="mx-auto max-w-[470px] md:mx-0">
             <p className="mb-2 font-display text-sm tracking-[.3em] text-gold2">{t('SWAMIYE SARANAM AYYAPPA')}</p>
             <h1 className="bg-gradient-to-r from-gold via-gold2 to-gold bg-clip-text text-4xl leading-tight text-transparent sm:text-6xl">{t('Sri Dharma Shasta')}</h1>
-            <p className="my-3 text-2xl">{t('Ayyappa Swamy Pooja Kits & Seva Services')}</p>
-            <p className="mb-4 text-2xl italic text-gold2">{t('Your One Stop Destination for All Ayyappa Swamy Pooja Needs')}</p>
+            <p className="my-3 text-lg leading-snug sm:text-2xl">{t('Ayyappa Swamy Pooja Kits & Seva Services')}</p>
+            <p className="mb-4 text-lg italic leading-snug text-gold2 sm:text-2xl">{t('Your One Stop Destination for All Ayyappa Swamy Pooja Needs')}</p>
             <p className="mb-4 italic tracking-wide text-gold2">{t('Faith • Devotion • Divine Blessings')}</p>
             <div className="flex flex-wrap justify-center gap-3 md:justify-start">
               <button className="pill" onClick={() => go('/store')}>{t('Pooja Kits')}</button>
@@ -111,14 +113,14 @@ export default function Home() {
       <Section title={t('The Five Sacred Shrines')} sub={t('Tap a card to turn it over.')}>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {TEMPLES.map((x) => (
-            <button key={x.name} aria-label={x.name} className="h-72 text-center [perspective:1000px]" onClick={() => setFlip({ ...flip, [x.name]: !flip[x.name] })}>
+            <button key={x.name} aria-label={`${flip[x.name] ? 'Show' : 'Read about'} ${x.name}`} aria-pressed={Boolean(flip[x.name])} className="h-72 text-center [perspective:1000px]" onClick={() => setFlip((current) => ({ ...current, [x.name]: !current[x.name] }))}>
               <div className={`relative h-full w-full transition-transform duration-700 [transform-style:preserve-3d] ${flip[x.name] ? '[transform:rotateY(180deg)]' : ''}`}>
                 
                 {/* Front Side with Background Image and Dark Gradient Overlay */}
                 <div 
-                  className="absolute inset-0 flex flex-col items-end justify-end rounded-2xl border border-gold p-4 text-left [backface-visibility:hidden] bg-cover bg-center overflow-hidden"
-                  style={{ backgroundImage: `url(${shrineImages[x.name] || shrineImages['Sabarimala']})` }}
+                  className="absolute inset-0 flex flex-col items-end justify-end overflow-hidden rounded-2xl border border-gold bg-coal p-4 text-left [backface-visibility:hidden]"
                 >
+                  <img aria-hidden="true" src={shrineImages[x.name] || shrineImages.Sabarimala} alt="" loading="lazy" onError={(event) => event.currentTarget.remove()} className="absolute inset-0 h-full w-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
                   <div className="relative z-10 w-full text-center">
                     <h3 className="text-lg font-bold text-gold2">{t(x.name)}</h3>
@@ -138,7 +140,7 @@ export default function Home() {
         </div>
       </Section>
 
-      <section id="founder" className="mx-auto max-w-6xl px-5 pb-16">
+      <section id="about" className="mx-auto max-w-6xl scroll-mt-24 px-5 pb-16">
         <div className="grid items-center gap-8 rounded-3xl border border-gold bg-gradient-to-br from-maroon to-[#1b0508] p-8 text-center shadow-[0_0_50px_#d4af3722] md:grid-cols-[auto_1fr] md:text-left">
           <img 
             src={asset(site.tantriProfileImage)}
@@ -146,10 +148,16 @@ export default function Home() {
             className="mx-auto h-60 w-40 rounded-2xl border-6 border-gold object-cover object-top shadow-lg md:mx-0" 
           />
           <div>
-            <h2 className="text-2xl">{t('Founder & Tantri')}</h2>
+            <p className="text-xs font-semibold uppercase tracking-[.25em] text-gold2">About Us</p>
+            <h2 className="mt-2 text-2xl">{t('Founder & Tantri')}</h2>
             <h3 className="my-1 text-xl text-gold2">{t('Tantri Naveen Kumar Sharma')}</h3>
-            <p className="mb-4">Hyderabad. Guiding devotees through Ayyappa poojas, homams and Melshanti with traditional Tantric practice.</p>
-            <button className="btn" onClick={() => go('/tantri')}>{t('Book Sevas')}</button>
+            <p className="mb-5 leading-7 text-[#e7d9bb]">Based in Hyderabad, Naveen Kumar Sharma guides devotees through Ayyappa poojas, homams and Melshanti, following traditional Tantric practice. Sri Dharma Shasta brings devotional services and pooja essentials together to support devotees in their spiritual journey.</p>
+            <div className="flex flex-wrap justify-center gap-3 md:justify-start">
+              <a className="ghost" href={`tel:${CONFIG.phone.replace(/\s/g, '')}`}>Call {CONFIG.phone}</a>
+              <a className="ghost" href={waLink('Namaste, I would like to know more about Sri Dharma Shasta.')} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+              <a className="ghost" href="https://www.instagram.com/sri_dharma_shasta/" target="_blank" rel="noopener noreferrer">Instagram</a>
+              <button className="btn" onClick={() => go('/tantri')}>{t('Book Sevas')}</button>
+            </div>
           </div>
         </div>
       </section>

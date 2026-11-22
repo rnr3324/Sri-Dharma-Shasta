@@ -8,6 +8,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../'
 const dataDir = path.join(root, 'data')
 const dataFile = path.join(dataDir, 'store.json')
 const profile = 'tantri-placeholder.svg'
+const defaultCoupon = () => ({ _id: randomUUID(), code: String(process.env.COUPON_CODE || 'SWAMI10').toUpperCase(), percent: Number(process.env.COUPON_PERCENT || 10), active: true })
 let state
 let pending = Promise.resolve()
 
@@ -15,9 +16,10 @@ export async function initLocalStore() {
   await mkdir(dataDir, { recursive: true })
   try { state = JSON.parse(await readFile(dataFile, 'utf8')) }
   catch {
-    state = { products: PRODUCTS.map((p) => ({ ...p, active: true })), orders: [], site: { tantriProfileImage: profile, tantriGallery: [] } }
+    state = { products: PRODUCTS.map((p) => ({ ...p, active: true })), orders: [], coupons: [defaultCoupon()], site: { tantriProfileImage: profile, tantriGallery: [] } }
     await persist()
   }
+  if (!Array.isArray(state.coupons)) { state.coupons = [defaultCoupon()]; await persist() }
   if (state.site?.tantriProfileImage === 'https://res.cloudinary.com/nemhlaod/image/upload/v1793177746/Gemini_Generated_Image_jlemghjlemghjlem.png') {
     state.site.tantriProfileImage = profile
     await persist()
@@ -44,6 +46,10 @@ const mutate = (fn) => {
   return job
 }
 export const localProducts = () => state.products.filter((p) => p.active).sort((a, b) => a.id - b.id)
+export const localCoupons = () => state.coupons.filter((coupon) => coupon.active).sort((a, b) => a.code.localeCompare(b.code))
+export const localAdminCoupons = () => [...state.coupons].sort((a, b) => a.code.localeCompare(b.code))
+export const createLocalCoupon = (coupon) => mutate(() => { const created = { ...coupon, _id: randomUUID(), active: true }; state.coupons.push(created); return created })
+export const updateLocalCoupon = (id, patch) => mutate(() => { const coupon = state.coupons.find((item) => item._id === id); if (!coupon) return null; Object.assign(coupon, patch); return coupon })
 export const localSite = () => state.site
 export const saveLocalSite = (site) => mutate(() => { state.site = site; return state.site })
 export const createLocalProduct = (product) => mutate(() => { const id = Math.max(0, ...state.products.map((p) => p.id)) + 1; const created = { ...product, id, active: true }; state.products.push(created); return created })

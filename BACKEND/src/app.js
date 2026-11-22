@@ -7,7 +7,8 @@ import { fileURLToPath } from 'node:url'
 import api from './routes/api.js'
 const app = express()
 const backendDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const origins = [process.env.CLIENT_URL || 'http://localhost:5173', ...(process.env.NODE_ENV !== 'production' ? ['http://localhost:5174', 'http://127.0.0.1:5173', 'http://127.0.0.1:5174'] : [])].flatMap((x) => x.split(',')).map((x) => x.trim())
+const origins = [process.env.CLIENT_URL || 'http://localhost:5173', ...(process.env.NODE_ENV !== 'production' ? ['http://localhost:5174', 'http://127.0.0.1:5173', 'http://127.0.0.1:5174'] : [])].flatMap((x) => x.split(',')).map((x) => x.trim()).filter(Boolean)
+if (process.env.NODE_ENV === 'production' && origins.some((origin) => { try { return new URL(origin).protocol !== 'https:' } catch { return true } })) throw new Error('CLIENT_URL must contain only valid HTTPS storefront origins in production')
 app.disable('x-powered-by')
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }))
 app.use(cors({ origin: origins, methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], allowedHeaders: ['Content-Type', 'Authorization'] }))

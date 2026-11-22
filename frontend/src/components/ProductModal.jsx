@@ -19,7 +19,6 @@ export default function ProductModal({ p, onClose }) {
           <ul className="mb-3 list-disc pl-5 text-[#e2d6bc]">{p.includes.map((i) => <li key={i}>{i}</li>)}</ul>
         </>
       )}
-      <small className="mb-3 block text-sm text-green-300">● In stock · ships in 2–3 days · free delivery above ₹999</small>
       <div className="flex flex-wrap gap-3">
         <button className="btn" onClick={() => { add(p.id); onClose() }}>{t('Add to Cart')}</button>
         <a className="ghost" target="_blank" rel="noopener noreferrer" href={waLink(`Namaste, I have a question about: ${p.name}`)}>Ask on WhatsApp</a>
